@@ -15,8 +15,8 @@
 # 1: LDAP
 ## Desc
 ### Non-LDAP
-* ln -s /var/cahce/{dnf,yum}
-* NTP (chrony)
+* Caches: ln -s /var/cahce/{dnf,yum}
+* NTP (chrony): dnf install chrony; systemctl enable chronyd.service; systemctl start chronyd.service
 * NFS (nfs-utils?)
 * ?diskless
 * ?cups
@@ -24,19 +24,8 @@
 
 ### LDAP
 * LDAP:
-** Packages:
-	- openldap-servers [openldap-clients] || 389-ds-base
-	? 389-console 389-admin 389-adminutil
-	- (4 pam-ldap[-nss])
-	- (4 named)
-	- (4 dhcpd)
-	- (4 samba)
-	- (4 IMAP/POP3 (cyrus))
-	- (4 SMTP (postfix))
-	- (4 ftpd)
-	- (4 httpd, webdav)
-	- (4 xmpp)
 ** dnf install 389-ds-base
+** ? 389-console 389-admin 389-adminutil
 ** groupadd -g 55 ldap
 ** useradd -c LDAP -d /var/lib/dirsrv -g 55 -s /sbin/nologin -u 55 ldap
 ** passwd ldap
@@ -51,7 +40,6 @@
 ** systemctl enable dirsrv.target
 ** systemctl start dirsrv.target
 ** systemctl status dirsrv.target
-** TODO: load scheme
 * PAM
 * DNS
 * DHCP
@@ -64,9 +52,9 @@
 * WebDAV
 * XMPP
 ### 386
-setup-ds.pl:
 	
 ### Addons
+* CUPS
 * SANE
 * DiskLess
 * eGW etc
