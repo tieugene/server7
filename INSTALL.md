@@ -1,0 +1,75 @@
+= 0: Zero =
+== Desc ==
+* / only
+* extremally thin (w/o selinux NM; 833M, 231 rpms)
+* += dnf mc rpmreaper net-tools
+* net: 192.168.0.1, server.lan
+* updated to 2016-03-02
+== TODO ==
+* yum -y install epel-release
+* yum install dnf mc rpmreaper net-tools
+* dnf update
+* /etc/sysconfig/selinux: disabled; /etc/fstab: /dev/vda
+* yum clean all; dnf clean all; dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
+
+= 1: LDAP =
+== Desc ==
+=== Non-LDAP ===
+* ln -s /var/cahce/{dnf,yum}
+* NTP (chrony)
+* NFS (nfs-utils?)
+* ?diskless
+* ?cups
+* ?sane
+
+=== LDAP ===
+* LDAP:
+** Packages:
+	- openldap-servers [openldap-clients] || 389-ds-base
+	? 389-console 389-admin 389-adminutil
+	- (4 pam-ldap[-nss])
+	- (4 named)
+	- (4 dhcpd)
+	- (4 samba)
+	- (4 IMAP/POP3 (cyrus))
+	- (4 SMTP (postfix))
+	- (4 ftpd)
+	- (4 httpd, webdav)
+	- (4 xmpp)
+** dnf install 389-ds-base
+** groupadd -g 55 ldap
+** useradd -c LDAP -d /var/lib/dirsrv -g 55 -s /sbin/nologin -u 55 ldap
+** passwd ldap
+** setup-ds.pl:
+	* yes
+	* custom
+	* <enter>
+	* user: ldap;
+	* group: ldap;
+	* port: 389
+	* DM DN: cn=odmin:tratatata
+** systemctl enable dirsrv.target
+** systemctl start dirsrv.target
+** systemctl status dirsrv.target
+** TODO: load scheme
+* PAM
+* DNS
+* DHCP
+* SAMBA
+* IMAP/POP3
+* SMTP
+* Proxy
+* FTP (pureftpd)
+* HTTP
+* WebDAV
+* XMPP
+=== 386 ===
+setup-ds.pl:
+	
+=== Addons ===
+* SANE
+* DiskLess
+* eGW etc
+
+= 2: upgrade =
+* ...

@@ -1,0 +1,3 @@
+/dev/vda1	/		ext4	defaults,noatime		1 1
+/dev/vdb1	swap		swap	defaults			0 0
+/dev/vdc1	/mnt/shares	ext4	defaults,noatime,acl,user_xattr	1 2
