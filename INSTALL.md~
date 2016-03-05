@@ -1,20 +1,20 @@
-# 0: Zero
-## Desc
+= 0: Zero =
+== Desc ==
 * / only
 * extremally thin (w/o selinux NM; 833M, 231 rpms)
 * += dnf mc rpmreaper net-tools
 * net: 192.168.0.1, server.lan
 * updated to 2016-03-02
-## TODO
+== TODO ==
 * yum -y install epel-release
 * yum install dnf mc rpmreaper net-tools
 * dnf update
 * /etc/sysconfig/selinux: disabled; /etc/fstab: /dev/vda
 * yum clean all; dnf clean all; dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
 
-# 1: LDAP
-## Desc
-### Non-LDAP
+= 1: LDAP =
+== Desc ==
+=== Non-LDAP ===
 * ln -s /var/cahce/{dnf,yum}
 * NTP (chrony)
 * NFS (nfs-utils?)
@@ -22,7 +22,7 @@
 * ?cups
 * ?sane
 
-### LDAP
+=== LDAP ===
 * LDAP:
 ** Packages:
 	- openldap-servers [openldap-clients] || 389-ds-base
@@ -63,13 +63,13 @@
 * HTTP
 * WebDAV
 * XMPP
-### 386
+=== 386 ===
 setup-ds.pl:
 	
-### Addons
+=== Addons ===
 * SANE
 * DiskLess
 * eGW etc
 
-# 2: upgrade
+= 2: upgrade =
 * ...
