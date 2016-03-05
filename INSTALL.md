@@ -13,7 +13,8 @@
 * yum clean all; dnf clean all; dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
 
 # 1: LDAP
-## Desc
+## Desc:
+Nothing
 ### Non-LDAP
 * Caches: ln -s /var/cahce/{dnf,yum}
 * NTP (chrony): dnf install chrony; systemctl enable chronyd.service; systemctl start chronyd.service
@@ -30,13 +31,12 @@
  * useradd -c LDAP -d /var/lib/dirsrv -g 55 -s /sbin/nologin -u 55 ldap
  * passwd ldap
  * setup-ds.pl:
-  * yes
-  * custom
-  * <enter>
-  * user: ldap;
-  * group: ldap;
-  * port: 389
-  * DM DN: cn=odmin:tratatata
+   * yes
+   * custom
+   * user: ldap;
+   * group: ldap;
+   * port: 389
+   * DM DN: cn=odmin:tratatata
  * systemctl enable dirsrv.target
  * systemctl start dirsrv.target
  * systemctl status dirsrv.target
@@ -52,7 +52,7 @@
 * WebDAV
 * XMPP
 ### 386
-	
+
 ### Addons
 * CUPS
 * SANE
