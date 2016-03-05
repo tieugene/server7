@@ -31,13 +31,12 @@ Nothing
  * useradd -c LDAP -d /var/lib/dirsrv -g 55 -s /sbin/nologin -u 55 ldap
  * passwd ldap
  * setup-ds.pl:
-  * yes
-  * custom
-  * <enter>
-  * user: ldap;
-  * group: ldap;
-  * port: 389
-  * DM DN: cn=odmin:tratatata
+   * yes
+   * custom
+   * user: ldap;
+   * group: ldap;
+   * port: 389
+   * DM DN: cn=odmin:tratatata
  * systemctl enable dirsrv.target
  * systemctl start dirsrv.target
  * systemctl status dirsrv.target
@@ -53,7 +52,7 @@ Nothing
 * WebDAV
 * XMPP
 ### 386
-	
+
 ### Addons
 * CUPS
 * SANE
