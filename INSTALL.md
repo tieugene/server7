@@ -25,12 +25,20 @@ Nothing
 
 ### LDAP
 * LDAP:
+(dc=lan)
+ * instal packages:
 ```
 dnf install 389-ds-base
 ? 389-console 389-admin 389-adminutil
+```
+ * create user&group:
+```
 groupadd -g 55 ldap
 useradd -c LDAP -d /var/lib/dirsrv -g 55 -s /sbin/nologin -u 55 ldap
 passwd ldap
+```
+ * config ldap server:
+```
 setup-ds.pl:
  yes
  custom
@@ -38,6 +46,9 @@ setup-ds.pl:
  group: ldap;
  port: 389
  DM DN: cn=odmin:tratatata
+```
+ * Let's go:
+```
 systemctl enable dirsrv.target
 systemctl start dirsrv.target
 systemctl status dirsrv.target
