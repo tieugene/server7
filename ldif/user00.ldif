@@ -1,0 +1,13 @@
+n: uid=user00,ou=Users,dc=ldap
+objectClass: top
+objectClass: posixAccount
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: cn00
+sn: sn00
+uid: user00
+uidNumber: 1000
+gidNumber: 100
+loginShell: /bin/bash
+homeDirectory: /mnt/shares/home/user00

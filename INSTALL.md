@@ -47,13 +47,24 @@ setup-ds.pl:
  port: 389
  DM DN: cn=odmin:tratatata
 ```
- * Let's go:
+ * Go:
 ```
 systemctl enable dirsrv.target
 systemctl start dirsrv.target
 systemctl status dirsrv.target
 ```
-* PAM
+* PAM:
+ * create LDAP entries:
+```
+ldapadd -x -D "cn=odmin" -w tratatata -h localhost -p 389 -f Users.ldif
+```
+ * install packages:
+```
+dnf install nss-pam-ldapd authconfig
+```
+ * configure pam:
+ * create homes:
+ * go:
 * DNS
 * DHCP
 * SAMBA
