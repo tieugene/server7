@@ -1,7 +1,7 @@
 #!/bin/sh
-# mk_users.sh - bulk user creation in ldap
+# mk_users.sh - bulk user creation (user00..user31) in ldap
 MIN=0
-MAX=30
+MAX=31
 for ((n=$MIN;n<=$MAX;n++)); do
     i=$(printf "%02d" $n)
     echo "\
@@ -18,6 +18,6 @@ uidNumber: 10$i
 gidNumber: 100
 loginShell: /bin/sh
 homeDirectory: /mnt/shares/home/user$i
-" | ldapadd -x -D "cn=odmin" -w tratatata -h localhost
-ldappasswd  -x -D "cn=odmin" -w tratatata -h localhost -s pass$i uid=user$i,ou=Users,dc=lan
+" | ldapadd -x -D "cn=odmin" -w secred -h localhost
+ldappasswd  -x -D "cn=odmin" -w secred -h localhost -s pass$i uid=user$i,ou=Users,dc=lan
 done

@@ -1,0 +1,10 @@
+dn: dc=lan
+objectClass: dcObject
+objectClass: organization
+dc: lan
+o: Contora, Ltd.
+
+dn: cn=odmin,dc=lan
+objectClass: organizationalRole
+cn: odmin
+description: Directory Manager

@@ -2,13 +2,14 @@
 ## Desc
 * / only
 * extremally thin (w/o selinux NM; 833M, 231 rpms)
-* += dnf mc rpmreaper net-tools
+* += dnf mc rpmreaper net-tools chrony
 * net: 192.168.0.1, server.lan
 * updated to 2016-03-02
 ## TODO
 * yum -y install epel-release
-* yum install dnf mc rpmreaper net-tools
+* yum install dnf mc rpmreaper net-tools chrony
 * dnf update
+* systemctl enable chronyd.service; systemctl start chronyd.service
 * /etc/sysconfig/selinux: disabled; /etc/fstab: /dev/vda
 * yum clean all; dnf clean all; dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
 
@@ -17,7 +18,6 @@
 Nothing
 ### Non-LDAP
 * Caches: ln -s /var/cahce/{dnf,yum}
-* NTP (chrony): dnf install chrony; systemctl enable chronyd.service; systemctl start chronyd.service
 * NFS (nfs-utils?)
 * ?diskless
 * ?cups
@@ -26,45 +26,72 @@ Nothing
 ### LDAP
 * LDAP:
 (dc=lan)
- * instal packages:
+ * 1. install openldap:
 ```
-dnf install 389-ds-base
-? 389-console 389-admin 389-adminutil
+dnf install\
+openldap-servers\
+openldap-clients\
+nss-pam-ldapd\
+authconfig\
+bind-sdb-chroot\
+[bind-dyndb-ldap]\
+dhcpd\
+smbldap-tools\
+samba-dc\
+dovecot\
+postfix
 ```
- * create user&group:
+ * 2. prepare:
 ```
-groupadd -g 55 ldap
-useradd -c LDAP -d /var/lib/dirsrv -g 55 -s /sbin/nologin -u 55 ldap
-passwd ldap
-```
- * config ldap server:
-```
-setup-ds.pl:
- yes
- custom
- user: ldap;
- group: ldap;
- port: 389
- DM DN: cn=odmin:tratatata
-```
- * Go:
-```
-systemctl enable dirsrv.target
-systemctl start dirsrv.target
-systemctl status dirsrv.target
+cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
+chown ldap. /var/lib/ldap/DB_CONFIG
+systemctl start slapd
+systemctl enable slapd
+# mk LDAP admin:
+slappasswd -s secred
+# import basic schemas
+# mk LDAM mgr:
+# mk initial tree root
 ```
 * PAM:
  * create LDAP entries:
 ```
 ldapadd -x -D "cn=odmin" -w tratatata -h localhost -p 389 -f Users.ldif
-```
- * install packages:
-```
-dnf install nss-pam-ldapd authconfig
+mk_users.sh
 ```
  * configure pam:
+```
+authconfig --enableldap --enableldapauth --disablenis --enablecache --ldapserver=localhost --ldapbasedn=dc=lan --updateall
+```
+ * /etc/openldap/ldap.conf:
+```
+tls_cacertdir /etc/openldap/cacerts
+uri ldap://localhost/
+base dc=ldap
+# added
+#host 127.0.0.1
+scope sub
+pam_filter objectclass=posixAccount
+pam_login_attribute uid
+pam_password exop
+nss_base_passwd ou=Users,dc=lan?one
+nss_base_shadow ou=Users,dc=lan?one
+nss_base_group  ou=Groups,dc=lan?one
+nss_initgroups_ignoreusers root,ldap
+ssl no
+pam_password md5
+```
+ * Enable services:
+```
+systemctl enable nscd && systemctl start nscd
+systemctl enable nslcd && systemctl start nslcd
+init 6
+```
  * create homes:
- * go:
+```
+mkdir -p /mnt/shares/home
+for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mnt/shares/home/$i; chown $i:users /mnt/shares/home/$i; done
+```
 * DNS
 * DHCP
 * SAMBA
@@ -75,6 +102,7 @@ dnf install nss-pam-ldapd authconfig
 * HTTP
 * WebDAV
 * XMPP
+* NFS
 ### 386
 
 ### Addons
@@ -84,4 +112,4 @@ dnf install nss-pam-ldapd authconfig
 * eGW etc
 
 # 2: upgrade
-* ...
+* export old LDAP data (users, hosts (dhcp)
