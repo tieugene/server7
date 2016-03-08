@@ -17,8 +17,8 @@ echo "\
 dn: olcDatabase={1}monitor,cn=config
 changetype: modify
 replace: olcAccess
-olcAccess: {0}to * by dn.base="gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth"
-  read by dn.base="cn=odmin,dc=lan" read by * none
+olcAccess: {0}to * by dn.base=\"gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth\"
+  read by dn.base=\"cn=odmin,dc=lan\" read by * none
 
 dn: olcDatabase={2}hdb,cn=config
 changetype: modify
@@ -39,8 +39,7 @@ dn: olcDatabase={2}hdb,cn=config
 changetype: modify
 add: olcAccess
 olcAccess: {0}to attrs=userPassword,shadowLastChange by
-  dn="cn=odmin,dc=lan" write by anonymous auth by self write by * none
-olcAccess: {1}to dn.base="" by * read
-olcAccess: {2}to * by dn="cn=odmin,dc=lan" write by * read
+  dn=\"cn=odmin,dc=lan\" write by anonymous auth by self write by * none
+olcAccess: {1}to dn.base=\"\" by * read
+olcAccess: {2}to * by dn=\"cn=odmin,dc=lan\" write by * read
 " | ldapmodify -Y EXTERNAL -H ldapi:///
-# 4. mk root
