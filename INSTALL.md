@@ -96,7 +96,9 @@ for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mn
 dnszone_schema2ldif.sh
 ```
 * add schema:
-```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif```
+```
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif
+```
 * add records:
 ```
 # DNS, server, gw tp LDAP
@@ -111,7 +113,10 @@ sh/mk_hosts.sh
 ```+ENABLE_SDB=yes```
 # patch /etc/resolve.conf:
 * service:
-```systemctl enable named-sdb && systemctl start named-sdb```
+```
+systemctl enable named-sdb
+systemctl start named-sdb
+```
 * check:
 ```
 host host002
@@ -130,16 +135,22 @@ schema2ldif.sh /etc/openldap/schema/dhcp.schema
 mv ~/dhcp.ldif /etc/openldap/schema/
 ```
 * add schema:
-```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif```
+```
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif
+```
 * add LDAP entries:
 ```
 sh/ldap_add.sh ldif/3-DHCP.ldif
 sh/mk_dhcp.sh
 ```
 * configure:
-```patch /etc/dhcp/dhcpd.conf```
+```
+patch /etc/dhcp/dhcpd.conf
+```
 * start service:
-```systemctl enable dhcpd && systemctl start dhcpd```
+```
+systemctl enable dhcpd && systemctl start dhcpd
+```
 * check
 
 # 5. SAMBA
