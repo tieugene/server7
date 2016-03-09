@@ -92,7 +92,9 @@ for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mn
 # 3. DNS
 * packages: bind-sdb bind-utils
 * convert schema (http://technik.blogs.nde.ag/2012/08/19/converting-and-adding-openldap-schema-files/):
-```dnszone_schema2ldif.sh```
+```
+dnszone_schema2ldif.sh
+```
 * add schema:
 ```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif```
 * add records:
