@@ -5,7 +5,7 @@ MAX=253
 for ((n=MIN;n<=$MAX;n++)); do
     i=$(printf "%03d" $n)
     echo "\
-dn: cn=host$i,cn=Static,cn=192.168.0.0,cn=config,cn=server.lan,ou=DHCP,dc=ldap
+dn: cn=host$i,cn=Static,cn=192.168.0.0,cn=config,cn=server.lan,ou=DHCP,dc=lan
 objectClass: top
 objectClass: dhcpHost
 cn: host$i
