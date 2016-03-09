@@ -90,25 +90,51 @@ mkdir -p /mnt/shares/home
 for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mnt/shares/home/$i; chown $i:users /mnt/shares/home/$i; done
 ```
 # 3. DNS
-* packages: bind-sdb-chroot
+* packages: bind-sdb bind-utils
 * convert schema (http://technik.blogs.nde.ag/2012/08/19/converting-and-adding-openldap-schema-files/):
 ```dnszone_schema2ldif.sh```
 * add schema:
 ```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif```
 * add records:
 ```
-# DNS, server, gw
+# DNS, server, gw tp LDAP
 sh/ldap_add.sh ldif/2-DNS.ldif
 # other
 sh/mk_hosts.sh
 ```
-* config named:
+* configure named:
 ```
+# patch /etc/named.conf:
+# patch /etc/sysconfig/named:
++ENABLE_SDB=yes
+# patch /etc/resolve.conf:
+...
 ```
 * service:
 ```systemctl enable named-sdb && systemctl start named-sdb```
 * check:
+```
+host host002
+host 192.168.0.2
+host ya.ru
+# TODO: hostXXX.lan not resolved
+```
+* ?indices?
+
 # 4. DHCP
+* packages: dhcp
+* convert schema:
+```
+schema2ldif.sh /etc/openldap/schema/dhcp.schema
+mv ~/dhcp.ldif /etc/openldap/schema/
+```
+* add schema:
+```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif```
+* add LDAP entries:
+* configure:
+* start service:
+* check:
+
 # 5. SAMBA
 # 6. IMAP/POP3
 # 7. SMTP

@@ -1,0 +1,7 @@
+--- /etc/sysconfig/named.orig  2016-03-09 13:57:06.489000000 +0300
++++ /etc/sysconfig/named       2016-03-09 13:57:19.251000000 +0300
+@@ -10,3 +10,4 @@
+ #                            valid before named starts. If you set this option
+ #                            to 'yes' then service file doesn't perform those
+ #                            checks.
++ENABLE_SDB=yes

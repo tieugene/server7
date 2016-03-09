@@ -1,0 +1,44 @@
+--- /etc/named.conf.orig     2016-03-09 14:34:17.506000000 +0300
++++ /etc/named.conf  2016-03-09 15:09:50.840000000 +0300
+@@ -8,13 +8,14 @@
+ //
+ 
+ options {
+-       listen-on port 53 { 127.0.0.1; };
++       listen-on port 53 { 127.0.0.1; 192.168.0.1; };
+        listen-on-v6 port 53 { ::1; };
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+-       allow-query     { localhost; };
++       allow-query { localhost; 192.168.0.0/24; };
++       forwarders { 8.8.8.8; 8.8.4.4; };
+ 
+        /* 
+         - If you are building an AUTHORITATIVE DNS server, do NOT enable recursion.
+@@ -28,8 +29,8 @@
+        */
+        recursion yes;
+ 
+-       dnssec-enable yes;
+-       dnssec-validation yes;
++       dnssec-enable no;
++       dnssec-validation no;
+ 
+        /* Path to ISC DLV key */
+        bindkeys-file "/etc/named.iscdlv.key";
+@@ -55,3 +56,13 @@
+ include "/etc/named.rfc1912.zones";
+ include "/etc/named.root.key";
+ 
++zone "lan." IN {
++       type master;
++       database "ldap ldap://127.0.0.1/zoneName=lan,ou=DNS,dc=lan 178600";
++       allow-update { none; };
++};
++zone "0.168.192.in-addr.arpa." IN {
++       type master;
++       database "ldap ldap://127.0.0.1/zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=lan 178600";
++       allow-update { none; };
++};

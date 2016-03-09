@@ -54,7 +54,7 @@ zoneName: 0.168.192.in-addr.arpa
 relativeDomainName: 1
 pTRRecord: server.lan.
 
-dn: relativeDomainName=gw,zoneName=lan,ou=DNS,dc=ldap
+dn: relativeDomainName=gw,zoneName=lan,ou=DNS,dc=lan
 objectClass: top
 objectClass: dNSZone
 zoneName: lan
@@ -62,7 +62,7 @@ relativeDomainName: gw
 dNSClass: IN
 aRecord: 192.168.0.254
 
-dn: relativeDomainName=254,zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=ldap
+dn: relativeDomainName=254,zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=lan
 objectClass: top
 objectClass: dNSZone
 zoneName: 0.168.192.in-addr.arpa

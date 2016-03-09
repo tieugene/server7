@@ -1,0 +1,42 @@
+dn: ou=DHCP,dc=ldap
+objectClass: top
+objectClass: organizationalUnit
+ou: DHCP
+
+dn: cn=server.lan,ou=DHCP,dc=ldap
+objectClass: top
+objectClass: dhcpServer
+cn: server.lan
+dhcpServiceDN: cn=config,cn=server.lan,ou=DHCP,dc=ldap
+
+dn: cn=config,cn=server.lan,ou=DHCP,dc=ldap
+cn: config
+objectClass: top
+objectClass: dhcpService
+objectClass: dhcpOptions
+dhcpPrimaryDN: cn=server.lan,ou=DHCP,dc=ldap
+dhcpOption: domain-name "lan"
+dhcpOption: domain-name-servers 192.168.0.1
+dhcpOption: time-offset -5
+dhcpOption: ntp-servers 192.168.0.1
+dhcpOption: broadcast-address 192.168.0.255
+dhcpOption: log-servers 192.168.0.1
+dhcpStatements: default-lease-time 21600
+dhcpStatements: max-lease-time 43200
+dhcpStatements: ddns-update-style none
+dhcpStatements: use-host-decl-names on
+
+dn: cn=192.168.0.0,cn=config,cn=server.lan,ou=DHCP,dc=ldap
+cn: 192.168.0.0
+objectClass: top
+objectClass: dhcpSubnet
+objectClass: dhcpOptions
+dhcpNetMask: 24
+dhcpOption: routers 192.168.0.1
+dhcpOption: routers 192.168.0.254
+dhcpOption: subnet-mask 255.255.255.0
+
+dn: cn=Static,cn=192.168.0.0,cn=config,cn=server.lan,ou=DHCP,dc=ldap
+objectClass: top
+objectClass: dhcpGroup
+cn: Static
