@@ -23,57 +23,52 @@
 
 rc=0
 
-if [ $# -gt 0 ] ; then
-	slaptest=$(which slaptest 2>/dev/null ||ls /usr/sbin/slaptest||echo "")
-	if [ -x $slaptest ] ; then
-		schemaFile="/etc/openldap/schema/dnszone.schema"
-		#localdir=$(pwd)
-		if [ -r $schemaFile ] ; then
-			targetFile=$(basename $schemaFile .schema).ldif
-			if [ ! -e $targetFile ] ; then
-				echo "$0: converting $schemaFile to LDIF $targetFile"
-				# create temp dir and config file
-				tmpDir=$(mktemp -d)
-				cd $tmpDir
-				echo "include /etc/openldap/schema/core.schema
+slaptest=$(which slaptest 2>/dev/null ||ls /usr/sbin/slaptest||echo "")
+if [ -x $slaptest ] ; then
+	schemaFile="/etc/openldap/schema/dnszone.schema"
+	#localdir=$(pwd)
+	if [ -r $schemaFile ] ; then
+		targetFile="/etc/openldap/schema/dnszone.ldif"
+		if [ ! -e $targetFile ] ; then
+			echo "$0: converting $schemaFile to LDIF $targetFile"
+			# create temp dir and config file
+			tmpDir=$(mktemp -d)
+			cd $tmpDir
+			echo "include /etc/openldap/schema/core.schema
 include /etc/openldap/schema/cosine.schema
 include /etc/openldap/schema/nis.schema
 include /etc/openldap/schema/inetorgperson.schema
 include /etc/openldap/schema/dnszone.schema" > tmp.conf
-				# convert
-				$slaptest -f tmp.conf -F $tmpDir
-				# 3. rename and sanitize
-				cd cn\=config/cn\=schema
-				filenametmp="cn=\{4\}dnszone.ldif"
-				sed -r -e  's/^dn: cn=\{0\}(.*)$/dn: cn=\1,cn=schema,cn=config/' \
-					-e 's/cn: \{0\}(.*)$/cn: \1/' \
-					-e '/^structuralObjectClass: /d' \
-					-e '/^entryUUID: /d' \
-					-e '/^creatorsName: /d' \
-					-e '/^createTimestamp: /d' \
-					-e '/^entryCSN: /d' \
-					-e '/^modifiersName: /d' \
-					-e '/^modifyTimestamp: /d' < $filenametmp > $targetFile
+			# convert
+			$slaptest -f tmp.conf -F $tmpDir
+			# 3. rename and sanitize
+			cd cn\=config/cn\=schema
+			filenametmp="cn={4}dnszone.ldif"
+			sed -r -e  's/^dn: cn=\{4\}(.*)$/dn: cn=\1,cn=schema,cn=config/' \
+				-e 's/cn: \{4\}(.*)$/cn: \1/' \
+				-e '/^structuralObjectClass: /d' \
+				-e '/^entryUUID: /d' \
+				-e '/^creatorsName: /d' \
+				-e '/^createTimestamp: /d' \
+				-e '/^entryCSN: /d' \
+				-e '/^modifiersName: /d' \
+				-e '/^modifyTimestamp: /d' < $filenametmp > $targetFile
 
-				# clean up
-				echo "$0: LDIF file successfully created as $targetFile"
-				rc=0
-				rm -rf $tmpDir
-			else
-				echo "$0: target file $targetFile already exists, aborting." >&2
-				rc=3
-			fi
+			# clean up
+			echo "$0: LDIF file successfully created as $targetFile"
+			rc=0
+			rm -rf $tmpDir
 		else
-			echo "$0: source file $schemaFile could not be read, aborting." >&2
-			rc=2
+			echo "$0: target file $targetFile already exists, aborting." >&2
+			rc=3
 		fi
 	else
-		echo "$0: could not locate slaptest binary, exiting." >&2
-		rc=1
+		echo "$0: source file $schemaFile could not be read, aborting." >&2
+		rc=2
 	fi
 else
-	echo "$0: usage: $0" >&2
-	rc=99
+	echo "$0: could not locate slaptest binary, exiting." >&2
+	rc=1
 fi
 
 exit $rc

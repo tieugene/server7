@@ -1,6 +1,8 @@
 #!/bin/sh
+
 # 0. gen password
 PASS=`slappasswd -s secred`
+
 # 1. chg root password
 echo "\
 dn: olcDatabase={0}config,cn=config
@@ -8,10 +10,12 @@ changetype: modify
 add: olcRootPW
 olcRootPW: $PASS
 " | ldapadd -Y EXTERNAL -H ldapi:///
+
 # 2. import schemas
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/cosine.ldif
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/nis.ldif
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/inetorgperson.ldif
+
 # 3. chg LDAP mgr:
 echo "\
 dn: olcDatabase={1}monitor,cn=config

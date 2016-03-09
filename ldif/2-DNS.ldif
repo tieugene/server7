@@ -1,0 +1,70 @@
+dn: ou=DNS,dc=lan
+objectClass: top
+objectClass: organizationalUnit
+ou: DNS
+
+dn: zoneName=lan,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: lan
+relativeDomainName: lan
+
+dn: relativeDomainName=@,zoneName=lan,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: lan
+relativeDomainName: @
+nSRecord: server.lan.
+sOARecord: server.lan. hostmaster.lan. 1 8H 2H 1W 1D
+
+dn: relativeDomainName=localhost,zoneName=lan,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: lan
+relativeDomainName: localhost
+dNSClass: IN
+aRecord: 127.0.0.1
+
+dn: relativeDomainName=server,zoneName=lan,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: lan
+relativeDomainName: server
+dNSClass: IN
+aRecord: 192.168.0.1
+
+dn: zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: 0.168.192.in-addr.arpa
+relativeDomainName: 0.168.192.in-addr.arpa
+
+dn: relativeDomainName=@,zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: 0.168.192.in-addr.arpa
+relativeDomainName: @
+nSRecord: server.lan.
+sOARecord: server.lan. hostmaster.lan. 1 8H 2H 1W 1D
+
+dn: relativeDomainName=1,zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=lan
+objectClass: top
+objectClass: dNSZone
+zoneName: 0.168.192.in-addr.arpa
+relativeDomainName: 1
+pTRRecord: server.lan.
+
+dn: relativeDomainName=gw,zoneName=lan,ou=DNS,dc=ldap
+objectClass: top
+objectClass: dNSZone
+zoneName: lan
+relativeDomainName: gw
+dNSClass: IN
+aRecord: 192.168.0.254
+
+dn: relativeDomainName=254,zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=ldap
+objectClass: top
+objectClass: dNSZone
+zoneName: 0.168.192.in-addr.arpa
+relativeDomainName: 254
+pTRRecord: gw.lan.

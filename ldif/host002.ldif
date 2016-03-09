@@ -1,0 +1,14 @@
+dn: relativeDomainName=host002,zoneName=lan,ou=DNS,dc=ldap
+objectClass: top
+objectClass: dNSZone
+zoneName: lan
+relativeDomainName: host002
+dNSClass: IN
+aRecord: 192.168.0.2
+
+dn: relativeDomainName=2,zoneName=0.168.192.in-addr.arpa,ou=DNS,dc=ldap
+objectClass: top
+objectClass: dNSZone
+zoneName: 0.168.192.in-addr.arpa
+relativeDomainName: 2
+pTRRecord: host002.lan.
