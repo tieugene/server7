@@ -106,10 +106,8 @@ sh/mk_hosts.sh
 ```
 # patch /etc/named.conf:
 # patch /etc/sysconfig/named:
-+ENABLE_SDB=yes
+```+ENABLE_SDB=yes```
 # patch /etc/resolve.conf:
-...
-```
 * service:
 ```systemctl enable named-sdb && systemctl start named-sdb```
 * check:
