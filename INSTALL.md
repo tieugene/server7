@@ -117,9 +117,10 @@ sh/mk_hosts.sh
 host host002
 host 192.168.0.2
 host ya.ru
-# TODO: hostXXX.lan not resolved
 ```
-* ?indices?
+* TODO:
+ * hostXXX.lan not resolved
+ * indices
 
 # 4. DHCP
 * packages: dhcp
@@ -131,9 +132,15 @@ mv ~/dhcp.ldif /etc/openldap/schema/
 * add schema:
 ```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dhcp.ldif```
 * add LDAP entries:
+```
+sh/ldap_add.sh ldif/3-DHCP.ldif
+sh/mk_dhcp.sh
+```
 * configure:
+```patch /etc/dhcp/dhcpd.conf```
 * start service:
-* check:
+```systemctl enable dhcpd && systemctl start dhcpd```
+* check
 
 # 5. SAMBA
 # 6. IMAP/POP3
