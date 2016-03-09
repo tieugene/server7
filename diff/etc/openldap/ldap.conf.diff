@@ -1,0 +1,17 @@
+--- /etc/openldap/ldap.conf.orig      2016-03-09 18:16:38.480000000 +0300
++++ /etc/openldap/ldap.conf   2016-03-09 11:04:33.421000000 +0300
+@@ -18,3 +18,14 @@
+ SASL_NOCANON   on
+ URI ldap://localhost/
+ BASE dc=lan
++# added
++scope sub
++pam_filter objectclass=posixAccount
++pam_login_attribute uid
++pam_password exop
++nss_base_passwd ou=Users,dc=lan?one
++nss_base_shadow ou=Users,dc=lan?one
++nss_base_group  ou=Groups,dc=lan?one
++nss_initgroups_ignoreusers root,ldap
++ssl no
++pam_password md5

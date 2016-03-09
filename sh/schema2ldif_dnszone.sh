@@ -16,7 +16,7 @@
 # If you find any problems with this code, please let the author know so that it can be fixed or at least others
 # can be warned.
 #
-# Usage: dnszone_schema2ldif.sh
+# Usage: schema2ldif_dnszone.sh
 # 
 # This program will try to convert the source file to an LDIF-style file, placing the resulting .ldif file
 # in the current directory.
