@@ -3,7 +3,7 @@
 ## Desc:
 * / only
 * extremally thin (w/o selinux NM; 833M, 231 rpms)
-* += dnf mc rpmreaper net-tools chrony man-db wget telnet git patch
+* += dnf mc rpmreaper net-tools chrony man-db wget telnet git patch bind-utils
 * net: 192.168.0.1, server.lan
 * updated to 2016-03-02
 
@@ -83,7 +83,7 @@ authconfig\
  --updateall
 ```
 * configure ldap client:
-```patch /etc/openldap/ldap.conf:```
+```patch /etc/openldap/ldap.conf diff/etc/openldap/ldap.conf.diff```
 * Enable services:
 ```
 systemctl enable nscd && systemctl start nscd && systemctl status nscd
@@ -102,7 +102,7 @@ for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mn
 * packages:
 ```dnf install bind-sdb bind-utils```
 * [convert schema](http://technik.blogs.nde.ag/2012/08/19/converting-and-adding-openldap-schema-files/):
-```dnszone_schema2ldif.sh```
+```sh/schema2ldif_dnszone.sh```
 * add schema:
 ```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif```
 * add records:
@@ -114,9 +114,9 @@ sh/mk_hosts.sh
 ```
 * configure named:
 ```
-# patch /etc/named.conf:
-# patch /etc/sysconfig/named:
-# patch /etc/resolve.conf:
+patch /etc/named.conf diff/etc/named.conf.diff
+patch /etc/sysconfig/named diff/etc/sysconfig/named.diff
+patch /etc/resolv.conf diff/etc/resolv.conf.diff
 ```
 * service:
 ```
@@ -136,8 +136,8 @@ host ya.ru
 * packages: dhcp
 * convert schema:
 ```
-schema2ldif.sh /etc/openldap/schema/dhcp.schema
-mv ~/dhcp.ldif /etc/openldap/schema/
+sh/schema2ldif.sh /etc/openldap/schema/dhcp.schema
+mv dhcp.ldif /etc/openldap/schema/
 ```
 * add schema:
 ```
@@ -150,7 +150,7 @@ sh/mk_dhcp.sh
 ```
 * configure:
 ```
-# patch /etc/dhcp/dhcpd.conf
+patch /etc/dhcp/dhcpd.conf diff/etc/dhcp/dhcpd.conf.diff
 ```
 * start service:
 ```
