@@ -2,3 +2,8 @@ dn: ou=Users,dc=lan
 objectClass: top
 objectClass: organizationalUnit
 ou: Users
+
+dn: ou=Groups,dc=lan
+objectClass: top
+objectClass: organizationalUnit
+ou: Users

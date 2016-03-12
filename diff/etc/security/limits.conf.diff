@@ -1,0 +1,7 @@
+--- /etc/security/limits.conf.orig    2016-03-12 14:21:14.038757274 +0300
++++ /etc/security/limits.conf 2016-03-12 14:22:05.849413437 +0300
+@@ -59,3 +59,4 @@
+ #@student        -       maxlogins       4
+ 
+ # End of file
++*      -       nofile  16385

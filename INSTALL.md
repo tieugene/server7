@@ -99,6 +99,9 @@ init 6
 mkdir -p /mnt/shares/home
 for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mnt/shares/home/$i; chown $i:users /mnt/shares/home/$i; done
 ```
+* TODO:
+ * my groups
+
 # 3. DNS
 * packages: bind-sdb bind-utils
 * [convert schema](http://technik.blogs.nde.ag/2012/08/19/converting-and-adding-openldap-schema-files/):
@@ -131,8 +134,8 @@ host 192.168.0.2
 host ya.ru
 ```
 * TODO:
- * hostXXX.lan not resolved
  * indices
+ * patch /usr/lib/systemd/system/named-sdb.service: After=slapd.service
 
 # 4. DHCP
 * packages: dhcp
@@ -164,29 +167,42 @@ systemctl enable dhcpd && systemctl start dhcpd && systemctl status dhcpd
 * packages: samba smbldap-tools
 * convert schema:
 ```
-sh/schema2ldif.sh /etc/openldap/schema/samba.schema
-mv ~/samba.ldif /etc/openldap/schema/
+sh/schema2ldif_samba.sh
+mv samba.ldif /etc/openldap/schema/
 ```
 * add schema:
 ```
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/samba.ldif
 ```
-* get domain SID:
+* get domain SID (?):
 ```
 SID=`net getlocalsid | gawk '{print $6}'`
 ```
+S-1-5-21-3690499936-354157325-1587777380
 * configure:
 ```
-# patch /etc/smbldap-tools/smbldap-bind.conf
-# patch /etc/smbldap-tools/smbldap.conf
-# patch /etc/smb.conf
+patch /etc/smbldap-tools/smbldap_bind.conf diff/etc/smbldap-tools/smbldap_bind.conf.diff
+patch /etc/smbldap-tools/smbldap.conf diff/etc/smbldap-tools/smbldap.conf.diff
+patch /etc/samba/smb.conf diff/etc/smb.conf.diff
 ```
-* it's alike a magic:
+* chk:
+```
+testparm
+```
+* mk folders:
+```
+mkdir /mnt/shares/{netlogon,profiles,private,public}
+chown -R :users /mnt/shares/{netlogon,profiles,private,public}
+chmod a+rwX /mnt/shares/{netlogon,profiles,private,public}
+```
+* make a magic:
 ```
 smbldap-populate (pass: root pass)
 ```
 * services:
 ```
+systemctl enable smb && systemctl start smb && systemctl status smb
+systemctl enable nmb && systemctl start nmb && systemctl status nmb
 ```
 * check
 * TODO:
@@ -221,3 +237,8 @@ smbldap-populate (pass: root pass)
 * CentOS7 zero ISO
 * CentOS LDAP ISO
 * mk_all.sh
+* mk LDAP entries like smbldap-tools:
+ * Users = People
+ * Hosts = Computers (?)
+ * Groups = Group
+ 
