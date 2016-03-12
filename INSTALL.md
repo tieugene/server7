@@ -64,8 +64,7 @@ sh/ldap_add.sh ldif/0-Root.ldif
 ```
 
 # 2. PAM
-* packages:
-```dnf install authconfig nss-pam-ldap```
+* packages: authconfig nss-pam-ldap
 * create LDAP entries:
 ```
 sh/ldap_add.sh ldif/1-Users.ldif
@@ -83,8 +82,10 @@ authconfig\
  --updateall
 ```
 * configure ldap client:
-```patch /etc/openldap/ldap.conf diff/etc/openldap/ldap.conf.diff```
-* Enable services:
+```
+patch /etc/openldap/ldap.conf diff/etc/openldap/ldap.conf.diff
+```
+* enable services:
 ```
 systemctl enable nscd && systemctl start nscd && systemctl status nscd
 systemctl enable nslcd && systemctl start nslcd && systemctl status nslcd
@@ -99,17 +100,18 @@ mkdir -p /mnt/shares/home
 for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mnt/shares/home/$i; chown $i:users /mnt/shares/home/$i; done
 ```
 # 3. DNS
-* packages:
-```dnf install bind-sdb bind-utils```
+* packages: bind-sdb bind-utils
 * [convert schema](http://technik.blogs.nde.ag/2012/08/19/converting-and-adding-openldap-schema-files/):
-```sh/schema2ldif_dnszone.sh```
+```
+sh/schema2ldif_dnszone.sh
+```
 * add schema:
-```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif```
+```
+ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif
+```
 * add records:
 ```
-# DNS, server, gw
 sh/ldap_add.sh ldif/2-DNS.ldif
-# other
 sh/mk_hosts.sh
 ```
 * configure named:
