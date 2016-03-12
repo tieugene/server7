@@ -12,7 +12,7 @@
 * yum install dnf mc rpmreaper net-tools chrony man-db wget telnet git patch
 * dnf update
 * chronyd:
-```systemctl enable chronyd.service; systemctl start chronyd.service```
+```systemctl enable chronyd && systemctl start chronyd```
 * /etc/sysconfig/selinux: disabled;
 * /etc/fstab: /dev/vda
 * rpmreaper
@@ -39,16 +39,16 @@ ln -s /var/cahce/{dnf,yum}
 * packages:
 ```
 dnf install\
-openldap-servers\
-openldap-clients\
-nss-pam-ldapd\
-authconfig\
-bind-sdb\
-dhcpd\
-smbldap-tools\
-samba\
-dovecot\
-postfix
+ openldap-servers\
+ openldap-clients\
+ nss-pam-ldapd\
+ authconfig\
+ bind-sdb\
+ dhcp\
+ smbldap-tools\
+ samba\
+ dovecot\
+ postfix
 ```
 * Prepare:
 ([HOWTO](http://www.server-world.info/en/note?os=CentOS_7&p=openldap))
@@ -58,24 +58,29 @@ chown ldap. /var/lib/ldap/DB_CONFIG
 systemctl enable slapd && systemctl start slapd && systemctl status slapd
 sh/init_ldap.sh
 ```
+* Root:
+```
+sh/ldap_add.sh ldif/0-Root.ldif
+```
+
 # 2. PAM
 * packages:
 ```dnf install authconfig nss-pam-ldap```
 * create LDAP entries:
 ```
-sh/ldap_add.sh ldif/Users.ldif
+sh/ldap_add.sh ldif/1-Users.ldif
 sh/mk_users.sh
 ```
 * configure pam:
 ```
 authconfig\
---enableldap\
---enableldapauth\
---disablenis\
---enablecache\
---ldapserver=localhost\
---ldapbasedn=dc=lan\
---updateall
+ --enableldap\
+ --enableldapauth\
+ --disablenis\
+ --enablecache\
+ --ldapserver=localhost\
+ --ldapbasedn=dc=lan\
+ --updateall
 ```
 * configure ldap client:
 ```patch /etc/openldap/ldap.conf:```

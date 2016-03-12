@@ -1,4 +1,4 @@
-n: uid=user00,ou=Users,dc=ldap
+n: uid=user00,ou=Users,dc=lan
 objectClass: top
 objectClass: posixAccount
 objectClass: person
