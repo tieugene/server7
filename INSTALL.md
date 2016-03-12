@@ -11,36 +11,42 @@
 * yum -y install epel-release
 * yum install dnf mc rpmreaper net-tools chrony man-db wget telnet git patch
 * dnf update
-* systemctl enable chronyd.service; systemctl start chronyd.service
+* chronyd:
+```systemctl enable chronyd.service; systemctl start chronyd.service```
 * /etc/sysconfig/selinux: disabled;
 * /etc/fstab: /dev/vda
 * rpmreaper
-* yum clean all; dnf clean all; dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
+* clean:
+```
+yum clean all
+dnf clean all
+dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
+```
 
 # 1: LDAP
 
 ## Desc:
-Nothing
+Pure LDAP
 
 ## TODO:
+* fstab:
 * caches:
 ```
 mkdir /mnt/shares/cache
-mv ...
+mv /var/cache/{dnf,yum}
 ln -s /var/cahce/{dnf,yum}
 ```
-* install packages:
+* packages:
 ```
 dnf install\
 openldap-servers\
 openldap-clients\
 nss-pam-ldapd\
 authconfig\
-bind-sdb-chroot\
-[bind-dyndb-ldap]\
+bind-sdb\
 dhcpd\
 smbldap-tools\
-samba-dc\
+samba\
 dovecot\
 postfix
 ```
@@ -49,35 +55,34 @@ postfix
 ```
 cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG
 chown ldap. /var/lib/ldap/DB_CONFIG
-systemctl enable slapd
-systemctl start slapd
-systemctl status slapd
+systemctl enable slapd && systemctl start slapd && systemctl status slapd
 sh/init_ldap.sh
 ```
 # 2. PAM
-* packages: authconfig nss-pam-ldap
+* packages:
+```dnf install authconfig nss-pam-ldap```
 * create LDAP entries:
 ```
-ldap_add.sh Users.ldif
-mk_users.sh
+sh/ldap_add.sh ldif/Users.ldif
+sh/mk_users.sh
 ```
 * configure pam:
 ```
 authconfig\
---enableldap --enableldapauth --disablenis --enablecache --ldapserver=localhost --ldapbasedn=dc=lan --updateall
+--enableldap\
+--enableldapauth\
+--disablenis\
+--enablecache\
+--ldapserver=localhost\
+--ldapbasedn=dc=lan\
+--updateall
 ```
 * configure ldap client:
-```
-patch /etc/openldap/ldap.conf:
-```
+```patch /etc/openldap/ldap.conf:```
 * Enable services:
 ```
-systemctl enable nscd
-systemctl start nscd
-systemctl status nscd
-systemctl enable nslcd
-systemctl start nslcd
-systemctl status nslcd
+systemctl enable nscd && systemctl start nscd && systemctl status nscd
+systemctl enable nslcd && systemctl start nslcd && systemctl status nslcd
 ```
 * Activate changes:
 ```
@@ -89,18 +94,15 @@ mkdir -p /mnt/shares/home
 for i in `getent passwd | gawk -F'[/:]' '{print $1}' | grep ^user`; do mkdir /mnt/shares/home/$i; chown $i:users /mnt/shares/home/$i; done
 ```
 # 3. DNS
-* packages: bind-sdb bind-utils
+* packages:
+```dnf install bind-sdb bind-utils```
 * [convert schema](http://technik.blogs.nde.ag/2012/08/19/converting-and-adding-openldap-schema-files/):
-```
-dnszone_schema2ldif.sh
-```
+```dnszone_schema2ldif.sh```
 * add schema:
-```
-ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif
-```
+```ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/dnszone.ldif```
 * add records:
 ```
-# DNS, server, gw tp LDAP
+# DNS, server, gw
 sh/ldap_add.sh ldif/2-DNS.ldif
 # other
 sh/mk_hosts.sh
@@ -113,9 +115,7 @@ sh/mk_hosts.sh
 ```
 * service:
 ```
-systemctl enable named-sdb
-systemctl start named-sdb
-systemctl status named-sdb
+systemctl enable named-sdb && systemctl start named-sdb && systemctl status named-sdb
 ```
 * check:
 ```
@@ -149,15 +149,13 @@ sh/mk_dhcp.sh
 ```
 * start service:
 ```
-systemctl enable dhcpd
-systemctl start dhcpd
-systemctl status dhcpd
+systemctl enable dhcpd && systemctl start dhcpd && systemctl status dhcpd
 ```
 * check
 
 # 5. SAMBA
 * packages: samba smbldap-tools
-* conver schema:
+* convert schema:
 ```
 sh/schema2ldif.sh /etc/openldap/schema/samba.schema
 mv ~/samba.ldif /etc/openldap/schema/
@@ -166,12 +164,32 @@ mv ~/samba.ldif /etc/openldap/schema/
 ```
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/samba.ldif
 ```
+* get domain SID:
+```
+SID=`net getlocalsid | gawk '{print $6}'`
+```
+* configure:
+```
+# patch /etc/smbldap-tools/smbldap-bind.conf
+# patch /etc/smbldap-tools/smbldap.conf
+# patch /etc/smb.conf
+```
+* it's alike a magic:
+```
+smbldap-populate (pass: root pass)
+```
+* services:
+```
+```
+* check
+* TODO:
+ * indices
 
 # 6. IMAP/POP3
 # 7. SMTP
-# 9. FTP (pureftpd)
-# 10. HTTP
-# 11. WebDAV
+# 8. FTP (pureftpd)
+# 9. HTTP
+# 10. WebDAV
 
 # Non-LDAP:
 * Proxy
@@ -189,7 +207,7 @@ ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/samba.ldif
 * eGW etc
 
 # Upgrade
-* export old LDAP data (users, hosts (dhcp)
+* export old LDAP data (users, hosts (dhcp))
 * import
 
 # TODO:
