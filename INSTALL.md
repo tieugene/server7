@@ -23,7 +23,7 @@ dnf clean all
 dd if=/dev/zero of=/bigfile bs=1M; rm -f /bigfile
 ```
 
-# 1: LDAP
+# 1: Core
 
 ## Desc:
 Pure LDAP
@@ -174,16 +174,11 @@ mv samba.ldif /etc/openldap/schema/
 ```
 ldapadd -Y EXTERNAL -H ldapi:/// -f /etc/openldap/schema/samba.ldif
 ```
-* get domain SID (?):
-```
-SID=`net getlocalsid | gawk '{print $6}'`
-```
-S-1-5-21-3690499936-354157325-1587777380
 * configure:
 ```
 patch /etc/smbldap-tools/smbldap_bind.conf diff/etc/smbldap-tools/smbldap_bind.conf.diff
 patch /etc/smbldap-tools/smbldap.conf diff/etc/smbldap-tools/smbldap.conf.diff
-patch /etc/samba/smb.conf diff/etc/smb.conf.diff
+cp diff/etc/samba/smb.conf /etc/samba/
 ```
 * chk:
 ```
@@ -195,9 +190,27 @@ mkdir /mnt/shares/{netlogon,profiles,private,public}
 chown -R :users /mnt/shares/{netlogon,profiles,private,public}
 chmod a+rwX /mnt/shares/{netlogon,profiles,private,public}
 ```
+* set root password:
+```
+smbpasswd -w secred
+```
 * make a magic:
 ```
 smbldap-populate (pass: root pass)
+```
+* Make our default group samba-cpbl:
+```
+smbldap-groupmod -a group00
+```
+* make users smb-compatible:
+```
+smbldap-usermod -a user01
+smbldap-groupmod -m user01 Domain\ Users
+echo passXX | smbldap-passwd -s -p user??
+mkdir /mnt/shares/profiles/user01
+chown user00:users /mnt/shares/profiles/user01
+mkdir /mnt/shares/private/user01
+chown user00:users /mnt/shares/prrivate/user01
 ```
 * services:
 ```
@@ -208,11 +221,12 @@ systemctl enable nmb && systemctl start nmb && systemctl status nmb
 * TODO:
  * indices
 
-# 6. IMAP/POP3
-# 7. SMTP
-# 8. FTP (pureftpd)
-# 9. HTTP
-# 10. WebDAV
+# Bonus
+## 6. IMAP/POP3
+## 7. SMTP
+## 8. FTP (pureftpd)
+## 9. HTTP
+## 10. WebDAV
 
 # Non-LDAP:
 * Proxy

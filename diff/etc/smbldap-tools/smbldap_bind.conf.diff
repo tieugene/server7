@@ -1,5 +1,5 @@
---- /etc/smbldap-tools/smbldap_bind.conf.orig      2016-03-09 19:22:06.385000000 +0300
-+++ /etc/smbldap-tools/smbldap_bind.conf   2016-03-09 19:29:25.324000000 +0300
+--- smbldap_bind.conf.orig	2016-03-12 13:09:37.292891200 +0300
++++ smbldap_bind.conf	2016-03-12 13:10:37.163898338 +0300
 @@ -7,7 +7,7 @@
  # master ldap for writing access and a slave ldap server for reading access
  # By default, we will use the same DN (so it will work for standard Samba

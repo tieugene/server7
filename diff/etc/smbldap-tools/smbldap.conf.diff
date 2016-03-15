@@ -1,0 +1,91 @@
+--- /etc/smbldap-tools/smbldap.conf.orig	2016-03-12 13:09:30.621890405 +0300
++++ /etc/smbldap-tools/smbldap.conf	2016-03-12 14:41:31.380735040 +0300
+@@ -38,7 +38,7 @@
+ # Domain name the Samba server is in charged.
+ # If not defined, parameter is taking from smb.conf configuration file
+ # Ex: sambaDomain="IDEALX-NT"
+-#sambaDomain="DOMSMB"
++sambaDomain="OFFICE"
+ 
+ ##############################################################################
+ #
+@@ -57,18 +57,18 @@
+ # Slave LDAP server URI
+ # Ex: slaveLDAP=ldap://slave.ldap.example.com/
+ # If not defined, parameter is set to "ldap://127.0.0.1/"
+-slaveLDAP="ldap://ldap.example.com/"
++#slaveLDAP="ldap://ldap.example.com/"
+ 
+ # Master LDAP server URI: needed for write operations
+ # Ex: masterLDAP=ldap://master.ldap.example.com/
+ # If not defined, parameter is set to "ldap://127.0.0.1/"
+-masterLDAP="ldap://ldap.example.com/"
++#masterLDAP="ldap://ldap.example.com/"
+ 
+ # Use TLS for LDAP
+ # If set to 1, this option will use start_tls for connection
+ # (you must also used the LDAP URI "ldap://...", not "ldaps://...")
+ # If not defined, parameter is set to "0"
+-ldapTLS="1"
++ldapTLS="0"
+ 
+ # How to verify the server's certificate (none, optional or require)
+ # see "man Net::LDAP" in start_tls section for more details
+@@ -88,22 +88,22 @@
+ 
+ # LDAP Suffix
+ # Ex: suffix=dc=IDEALX,dc=ORG
+-suffix="dc=example,dc=com"
++suffix="dc=lan"
+ 
+ # Where are stored Users
+ # Ex: usersdn="ou=Users,dc=IDEALX,dc=ORG"
+ # Warning: if 'suffix' is not set here, you must set the full dn for usersdn
+-usersdn="ou=People,${suffix}"
++usersdn="ou=Users,${suffix}"
+ 
+ # Where are stored Computers
+ # Ex: computersdn="ou=Computers,dc=IDEALX,dc=ORG"
+ # Warning: if 'suffix' is not set here, you must set the full dn for computersdn
+-computersdn="ou=Computers,${suffix}"
++computersdn="ou=Hosts,${suffix}"
+ 
+ # Where are stored Groups
+ # Ex: groupsdn="ou=Groups,dc=IDEALX,dc=ORG"
+ # Warning: if 'suffix' is not set here, you must set the full dn for groupsdn
+-groupsdn="ou=Group,${suffix}"
++groupsdn="ou=Groups,${suffix}"
+ 
+ # Where are stored Idmap entries (used if samba is a domain member server)
+ # Ex: idmapdn="ou=Idmap,dc=IDEALX,dc=ORG"
+@@ -141,7 +141,7 @@
+ 
+ # Home directory
+ # Ex: userHome="/home/%U"
+-userHome="/home/%U"
++userHome="/mnt/shares/home/%U"
+ 
+ # Default mode used for user homeDirectory
+ userHomeDirectoryMode="700"
+@@ -176,18 +176,18 @@
+ # Just set it to a null string if you want to use the smb.conf 'logon home'
+ # directive and/or disable roaming profiles
+ # Ex: userSmbHome="\\PDC-SMB3\%U"
+-userSmbHome="\\PDC-SRV\%U"
++userSmbHome="\\SERVER\%U"
+ 
+ # The UNC path to profiles locations (%U username substitution)
+ # Just set it to a null string if you want to use the smb.conf 'logon path'
+ # directive and/or disable roaming profiles
+ # Ex: userProfile="\\PDC-SMB3\profiles\%U"
+-userProfile="\\PDC-SRV\profiles\%U"
++userProfile="\\SERVER\profiles\%U"
+ 
+ # The default Home Drive Letter mapping
+ # (will be automatically mapped at logon time if home directory exist)
+ # Ex: userHomeDrive="H:"
+-userHomeDrive="H:"
++userHomeDrive="X:"
+ 
+ # The default user netlogon script name (%U username substitution)
+ # if not used, will be automatically username.cmd
